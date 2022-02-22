@@ -15,7 +15,7 @@ a small cli program written in go that generates random ip addresses and "does t
 
 ### requirements:
 
-- go (currently using 1.17.6)
+- [go](https://go.dev/) (currently using 1.17.6)
 - that's about it
 
 ### how:
