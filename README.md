@@ -22,9 +22,7 @@ a small cli program written in go that generates random ip addresses and "does t
 
 windows: `go build -o ./bin/ipaddrgen.exe ./src`
 
-linux: `go build -o ./bin/ipaddrgen ./src`
-
-mac: idk I've never built an executable for mac (should be about the same)
+linux/mac: `go build -o ./bin/ipaddrgen ./src`
 
 ---
 
