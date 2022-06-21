@@ -7,11 +7,13 @@ a small cli program written in go that generates random ip addresses and "does t
 
 **A:** I was very bored.
 
+*legal disclaimer: no this isn't a "hacking" tool, it's a goofy piece of software that spits text out onto the screen and nothing more. I wholeheartedly encourage that this software be used in le funny hacking montage.*
+
 # screenies 📸
 
 ![ipaddrgen in action](screenshots/v1term.png)
 
-# install 📀
+# build 📀
 
 ### requirements:
 
