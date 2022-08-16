@@ -50,12 +50,12 @@ var methods = []string{
 	"surveilling",
 	"webcrawling",
 	"scanning traffic from",
-	"",
+	"tunelling my smart oven to",
 	"i forgot",
 	"applying thermal paste to",
 	"committing tax fraud with",
 	"torrenting disney movies on",
-	"surfing the web with",
+	"surfing the web on",
 	"LOL'ing",
 	"shitposting on",
 	"wasting time on",
@@ -100,7 +100,6 @@ var methods = []string{
 	"randomizing chance on",
 	"exposing dream's cheating scandal from",
 	"hosting dream SMP on",
-	"wow look funny numbers!",
 	"brapping",
 	":)",
 	"jerking off",
@@ -130,7 +129,7 @@ var methods = []string{
 	"sending nudes to",
 	"installing a VPN on",
 	"stealing nudes from",
-	"getting critical alerts from microsoft on",
+	"getting critical wirus alerts from",
 	":trollface:ing",
 	"staring at",
 	"PWNing",
@@ -140,7 +139,7 @@ var methods = []string{
 	"generating",
 	"banning",
 	"proxying",
-	"racially profiling",
+	"causing a ruckus on",
 	"grossly offending",
 	"nullnullnull",
 }
@@ -183,7 +182,7 @@ func main() {
 
 		// random chance to have a port
 		// "what are the chances of this firing with ipv6?" - loudar, seconds before getting an ipv6 with a port
-		if rand.Intn(100) < 5 && !wasPorted && method != "closing all ports on" || true {
+		if rand.Intn(100) < 5 && !wasPorted && method != "closing all ports on" {
 			address += ":" + color.Ize(color.Cyan, strconv.FormatInt(rand.Int63n(65535), 10))
 			wasPorted = true
 		} else {
