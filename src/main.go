@@ -2,10 +2,10 @@ package main
 
 import (
 	"bufio"
+	"embed"
 	"fmt"
 	"log"
 	"math/rand"
-	"os"
 	"strconv"
 	"time"
 
@@ -19,7 +19,9 @@ var i_was_IPv6 = false
 var i_was_ported = false
 var i_last_method string
 var i_methods []string
-var methods_file = "methods.txt"
+
+//go:embed methods.txt
+var i_methods_file embed.FS
 
 // === timings ===
 
@@ -43,7 +45,7 @@ var port_chance = 0.05
 func main() {
 
 	// read the methods file!
-	content, err := os.Open(methods_file)
+	content, err := i_methods_file.Open("methods.txt")
 	if err != nil {
 		// fuck!!!
 		log.Fatal(err)
