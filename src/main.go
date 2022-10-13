@@ -1,225 +1,171 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"math"
+	"log"
 	"math/rand"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/TwiN/go-color"
 )
 
-var methods = []string{
-	"trolling",
-	"nuking",
-	"DDoSing",
-	"colour-coding",
-	"evaluating",
-	"pissing on",
-	"installing apache2 on",
-	"crypto mining on",
-	"teleporting to",
-	"griefing",
-	"fetishising",
-	"publically endorsing",
-	"crowdfunding",
-	"noscoping",
-	"load balancing",
-	"expiring SSL certs on",
-	"scamming",
-	"http.POST('dickbutt')ing on",
-	"torrenting Bee Movie from",
-	"defragmenting",
-	"debugging",
-	"lorem ipsuming",
-	"telling your mother about",
-	"randomly generating",
-	"[meta joke]ing",
-	"making amazon purchases on",
-	"minting",
-	"investing in",
-	"starting an NFT collection using",
-	"buying",
-	"parking",
-	"truncating",
-	"deleting",
-	"disconnecting",
-	"blacklisting \"pornhub.com\" on",
-	"reporting",
-	"surveilling",
-	"webcrawling",
-	"scanning traffic from",
-	"tunelling my smart oven to",
-	"i forgot",
-	"applying thermal paste to",
-	"committing tax fraud with",
-	"torrenting disney movies on",
-	"surfing the web on",
-	"LOL'ing",
-	"shitposting on",
-	"wasting time on",
-	"setting while loop flags for', // ",
-	"livestreaming",
-	"introducing the in-laws to",
-	"404'ing",
-	"leaking",
-	"connecting via bluetooth to",
-	"obtaining the wi-fi password for",
-	"you were never actually going to visit",
-	"decrypting",
-	"encrypting",
-	"firewalling",
-	"installing",
-	"hacking",
-	"inspecting the elements of",
-	"tunelling via",
-	"downloading from",
-	"uploading to",
-	"throttling",
-	"nuclear-powering",
-	"rat-infesting",
-	"installing Windows Server 2008 on",
-	"connecting my raspberry pi to",
-	"git committing",
-	"sudo rm -rf /'ing",
-	"doing your mom on",
-	"balling",
-	"pirating on",
-	"downloading R2R software from",
-	"water-cooling",
-	"ejecting",
-	"formatting",
-	"formatting system partition on",
-	"vaccinating",
-	"medicating",
-	"injecting",
-	"pouring milk on",
-	"microwaving",
-	"deepfrying",
-	"randomizing chance on",
-	"exposing dream's cheating scandal from",
-	"hosting dream SMP on",
-	"brapping",
-	":)",
-	"jerking off",
-	"rendering",
-	"saving to",
-	"screenshotting",
-	"pinging",
-	"FATAL ERROR: cannot connect to",
-	"ok bud 👍",
-	"streaming 'Big Mouth' from",
-	"casting to",
-	"synchronising",
-	"closing all ports on",
-	"finding your father on",
-	"SSHing to",
-	"printscreening",
-	"sending ominous countdown to",
-	"sending pizzas to",
-	"sending doordash to",
-	"transcoding",
-	"killing",
-	"pending",
-	"buffering",
-	"loading",
-	"hard-wiring",
-	"fucking",
-	"sending nudes to",
-	"installing a VPN on",
-	"stealing nudes from",
-	"getting critical wirus alerts from",
-	":trollface:ing",
-	"staring at",
-	"PWNing",
-	"downloading RAM from",
-	"hey google, connect to",
-	"stealing",
-	"generating",
-	"banning",
-	"proxying",
-	"causing a ruckus on",
-	"grossly offending",
-	"nullnullnull",
-}
+// === internal vars (no need to edit these!) ===
 
-var running = true
-var progress = 0
-var wasIPv6 = false
-var wasPorted = false
-var lastMethod string
-var method string
+var running bool
+var i_was_IPv6 = false
+var i_was_ported = false
+var i_last_method string
+var i_methods []string
+var methods_file = "methods.txt"
 
-func segv4() string {
-	return strconv.FormatInt(rand.Int63n(255), 10)
-}
-func segv6() string {
-	return strconv.FormatInt(rand.Int63n(65535), 16)
-}
+// === timings ===
+
+// minimum wait for an update (ms).
+var min_wait int64 = 0
+
+// maximum wait for an update (ms).
+var max_wait int64 = 50
+
+// === chances ===
+
+// chance (0.0 - 1.0) for the operation to complete each update.
+var complete_rate = 0.1
+
+// chance (0.0 - 1.0) for the random IP to be IPv6.
+var ipv6_chance = 0.05
+
+// chance (0.0 - 1.0) for the random IP to have a port.
+var port_chance = 0.05
 
 func main() {
 
+	// read the methods file!
+	content, err := os.Open(methods_file)
+	if err != nil {
+		// fuck!!!
+		log.Fatal(err)
+		return
+	}
+
+	// line scanner for the methods file!
+	scanner := bufio.NewScanner(content)
+	for scanner.Scan() {
+		// append new lines to the methods list!
+		i_methods = append(i_methods, scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		// fuck!!!
+		log.Fatal(err)
+		return
+	}
+
+	// close the file afterwards!
+	content.Close()
+
 	rand.Seed(time.Now().UnixNano())
 
+	var waitdelta = max_wait - min_wait
+
+	running = true
 	for running {
 
-		// what are we doing
-		for method == lastMethod {
-			method = color.Ize(color.White, methods[rand.Intn(len(methods))])
-		}
+		// === create a new IP to do the funny to ===
 
-		// where are we doing it
-		var address string = color.Ize(color.Yellow, segv4()+"."+segv4()+"."+segv4()+"."+segv4())
+		// what are we doing (method)
+		var method = newMethod()
 
-		// random chance to be IPv6
-		if rand.Intn(100) < 5 && !wasIPv6 {
-			address = color.Ize(color.Yellow, segv6()+":"+segv6()+":"+segv6()+":"+segv6()+":"+segv6()+":"+segv6()+":"+segv6()+":"+segv6())
-			wasIPv6 = true
-		} else {
-			wasIPv6 = false
-		}
+		// where are we doing it (address)
+		var address string = newAddress(
+			ipv6_chance, port_chance,
+			method != "opening all ports on" &&
+				method != "closing all ports on")
 
-		// random chance to have a port
-		// "what are the chances of this firing with ipv6?" - loudar, seconds before getting an ipv6 with a port
-		if rand.Intn(100) < 5 && !wasPorted && method != "closing all ports on" {
-			address += ":" + color.Ize(color.Cyan, strconv.FormatInt(rand.Int63n(65535), 10))
-			wasPorted = true
-		} else {
-			wasPorted = false
-		}
+		// === print the damn thing! ===
 
-		// print ip address with method(if applicable)
+		// > [doing something to] 127.0.0.1...
 		if method != " " {
 			fmt.Print(method, " ")
 		}
 		fmt.Print(address)
 
-		// ...........................................[ √ ]
-		var complete = false
-		for !complete {
-			if rand.Intn(10) < 9 || progress < 3 {
-				// process.stdout.write('.')
+		// and now, the slow, painful wait begins...
+		var progress = 0
+		for {
+			// if complete check fails, and we have over 3 wait periods...
+			// print periods at random intervals, wasting the user's time
+			if rand.Float64() > complete_rate || progress < 3 {
+				// > ..........
 				fmt.Print(".")
 				progress++
 
-				// set complete time
-				// var waitUntil = new Date().getTime() + 250 + math.round(math.min(2**(random()*12), 5000+random()*1000))
-				var waitUntil = time.Now().UnixMilli() + 250 + int64(math.Min(math.Pow(2, float64(rand.Intn(12))), float64(5000+rand.Intn(1000))))
+				// time (ms) after which the progress bar will update
+				var waitUntil = time.Now().UnixMilli() +
+					int64(min_wait) +
+					rand.Int63n(waitdelta)
 
-				// wait until time has arrived
+				// wait until flag time reached
 				for time.Now().UnixMilli() < waitUntil {
-					// do nothing
 				}
-			} else {
-				// console.log('['+' ✔️ '.green+']')
-				fmt.Print("[ " + color.Ize(color.Green, "√") + " ]\n")
-				progress = 0
-				complete = true
+
+				continue
 			}
+
+			// [ √ ]
+			fmt.Print("[ " + color.Ize(color.Green, "√") + " ]\n")
+
+			break
 		}
 
-		lastMethod = method
-
 	}
+}
+
+func newMethod() string {
+	var method string = i_last_method
+	for method == i_last_method {
+		method = color.Ize(color.White, i_methods[rand.Intn(len(i_methods))])
+	}
+	i_last_method = method
+	return method
+}
+
+// newAddress returns a randomly-generated IP address, IPv4 or IPv6, sometimes with a port.
+//
+// the chance of an IPv6 being returned is determined by ipv6_chance.
+// the chance of a port being assigned is determined by port_chance and no_ports.
+func newAddress(ipv6_chance float64, port_chance float64, no_ports bool) string {
+	var addr string
+
+	// random chance to be IPv6 (ffe8::...)
+	if rand.Float64() > ipv6_chance {
+		addr = color.Ize(color.Yellow, segv4()+"."+segv4()+"."+segv4()+"."+segv4())
+	} else {
+		addr = color.Ize(color.Yellow, segv6()+":"+segv6()+":"+segv6()+":"+segv6()+":"+segv6()+":"+segv6()+":"+segv6()+":"+segv6())
+	}
+
+	// random chance to have a port
+	// "what are the chances of this firing with ipv6?"
+	//     - loudar, seconds before getting an ipv6 with a port
+	if rand.Float64() < port_chance && !no_ports {
+		addr += ":" + color.Ize(color.Cyan, strconv.FormatInt(rand.Int63n(65535), 10))
+	}
+
+	return addr
+}
+
+// returns an IPv4 segment, a random 8-bit value, in decimal.
+//
+// i.e. 0, 69, 88, 123, 127, 255...
+func segv4() string {
+	return strconv.FormatInt(rand.Int63n(255), 10)
+}
+
+// returns an IPv6 segment, a random 16-bit value, in hexadecimal.
+//
+// i.e. ff80, e396, 4d87, c388, c5f6...
+func segv6() string {
+	return strconv.FormatInt(rand.Int63n(65535), 16)
 }

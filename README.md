@@ -1,7 +1,7 @@
 # ipaddrgen 👩‍💻
 ### the funny ip address generator
 
-a small cli program written in go that generates random ip addresses and "does things" to them. (often very slowly)
+a small cli program written in go that generates random ip addresses and "does things" to them.
 
 **Q:** *"why would you make this?"*
 
@@ -25,6 +25,8 @@ a small cli program written in go that generates random ip addresses and "does t
 windows: `go build -o ./bin/ipaddrgen.exe ./src`
 
 linux/mac: `go build -o ./bin/ipaddrgen ./src`
+
+*alternatively, just run it with `go run ./src`*
 
 ---
 
