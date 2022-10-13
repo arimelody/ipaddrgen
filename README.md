@@ -13,7 +13,15 @@ a small cli program written in go that generates random ip addresses and "does t
 
 ![ipaddrgen in action](screenshots/v1term.png)
 
-# build 📀
+# use it! ✨
+
+[download](https://github.com/mellodoot/ipaddrgen/releases/latest) whichever version is compatible with your OS (if such a version isn't listed, I'm so sorry!), then run it via your terminal!
+
+i.e. `./ipaddrgen-PLATFORM-ARCH`
+
+for help with command-line arguments (for some fun customisation), try `./ipaddrgen -h`!
+
+# build it! 📀
 
 ### requirements:
 
