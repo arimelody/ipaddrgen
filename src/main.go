@@ -17,16 +17,11 @@ import (
 // === internal vars (no need to edit these!) ===
 
 var running bool
-var i_was_IPv6 = false
-var i_was_ported = false
 var i_last_method string
 var i_methods []string
 
 //go:embed methods.txt
 var i_methods_file embed.FS
-
-//go:embed help.txt
-var i_help_file embed.FS
 
 // === timings ===
 
@@ -50,7 +45,7 @@ var port_chance = 0.05
 
 func main() {
 
-	if argIndex("h") >= 0 {
+	if argIndex("h") >= 0 || argIndex("help") >= 0 {
 		showHelp()
 		return
 	}
