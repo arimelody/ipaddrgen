@@ -1,0 +1,16 @@
+{
+  "name": "ipaddrgen",
+  "version": "1.0.0",
+  "description": "the funny ip address generator",
+  "main": "ipaddrgen.js",
+  "scripts": {
+    "start": "node ./ipaddrgen.js",
+    "dev": "nodemon ./ipaddrgen.js"
+  },
+  "author": "mellodoot",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^17.0.17",
+    "colors": "^1.4.0"
+  }
+}
